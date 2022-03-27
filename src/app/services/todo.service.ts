@@ -67,16 +67,21 @@ export class TodoService {
   }
 
   toggleAll() {
-    this.todos = this.todos.map(todo => {
+    this.todos = this.todos.map((todo) => {
       return {
         ...todo,
-        isCompleted: !this.todos.every(t => t.isCompleted)
-      }
-    })
+        isCompleted: !this.todos.every((t) => t.isCompleted),
+      };
+    });
     this.updateToLocalStorage();
   }
 
-  filterTodos(currentFilter: Filter, isFiltering: boolean) {
+  clearCompleted() {
+    this.todos = this.todos.filter(todo => !todo.isCompleted);
+    this.updateToLocalStorage();
+  }
+
+  filterTodos(currentFilter: Filter, isFiltering: boolean = true) {
     this.currentFilter = currentFilter;
 
     switch (currentFilter) {
