@@ -38,9 +38,16 @@ export class TodoService {
     this.updateTodosData();
   }
 
+  addTodo(content: string) {
+    const id = new Date(Date.now()).getTime();
+    const newTodo = new Todo(id, content);
+    this.todos.unshift(newTodo);
+    this.updateToLocalStorage();
+  }
+
   filterTodos(currentFilter: Filter, isFiltering: boolean) {
     this.currentFilter = currentFilter;
-    
+
     switch (currentFilter) {
       case Filter.Active:
         this.filteredTodos = this.todos.filter((todo) => !todo.isCompleted);
