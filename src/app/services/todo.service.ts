@@ -28,7 +28,7 @@ export class TodoService {
   fetchFromLocalStorage() {
     this.todos =
       this.storageService.getValue<Todo[]>(TodoService.TodoStorageKey) || [];
-    this.filteredTodos = [...this.todos]; // deep clone
+    this.filteredTodos = [...this.todos];
     this.updateTodosData();
   }
 
