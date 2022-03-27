@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Todo } from 'src/app/models/todo.model';
 
 @Component({
   selector: 'app-todo-item',
@@ -7,12 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TodoItemComponent implements OnInit {
 
+  @Input() todo!: Todo;
+  @Output() statusChange: EventEmitter<Todo> = new EventEmitter<Todo>();
+
   isHovered = false;
   isEditing = false;
   
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  changeTodoStatus(): void {
+    this.statusChange.emit({...this.todo, isCompleted: !this.todo.isCompleted});
   }
 
 }

@@ -38,6 +38,14 @@ export class TodoService {
     this.updateTodosData();
   }
 
+  changeTodoStatus(id: number, isCompleted: boolean) {
+    const index = this.todos.findIndex(todo => todo.id === id);
+    const todoToUpdate = this.todos[index];
+    todoToUpdate.isCompleted = isCompleted;
+    this.todos.splice(index, 1, todoToUpdate);
+    this.updateToLocalStorage();
+  }
+
   addTodo(content: string) {
     const id = new Date(Date.now()).getTime();
     const newTodo = new Todo(id, content);
