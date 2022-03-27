@@ -28,7 +28,7 @@ export class TodoService {
   fetchFromLocalStorage() {
     this.todos =
       this.storageService.getValue<Todo[]>(TodoService.TodoStorageKey) || [];
-    this.filteredTodos = [...this.todos.map((todo) => ({ ...todo }))]; // deep clone
+    this.filteredTodos = [...this.todos]; // deep clone
     this.updateTodosData();
   }
 
@@ -38,18 +38,41 @@ export class TodoService {
     this.updateTodosData();
   }
 
+  addTodo(content: string) {
+    const id = new Date(Date.now()).getTime();
+    const newTodo = new Todo(id, content);
+    this.todos.unshift(newTodo);
+    this.updateToLocalStorage();
+  }
+
   changeTodoStatus(id: number, isCompleted: boolean) {
-    const index = this.todos.findIndex(todo => todo.id === id);
+    const index = this.todos.findIndex((todo) => todo.id === id);
     const todoToUpdate = this.todos[index];
     todoToUpdate.isCompleted = isCompleted;
     this.todos.splice(index, 1, todoToUpdate);
     this.updateToLocalStorage();
   }
 
-  addTodo(content: string) {
-    const id = new Date(Date.now()).getTime();
-    const newTodo = new Todo(id, content);
-    this.todos.unshift(newTodo);
+  editTodo(id: number, content: string) {
+    const index = this.todos.findIndex((todo) => todo.id === id);
+    const todoToUpdate = this.todos[index];
+    todoToUpdate.content = content;
+    this.todos.splice(index, 1, todoToUpdate);
+    this.updateToLocalStorage();
+  }
+
+  deleteTodo(id: number) {
+    this.todos = this.todos.filter((todo) => todo.id !== id);
+    this.updateToLocalStorage();
+  }
+
+  toggleAll() {
+    this.todos = this.todos.map(todo => {
+      return {
+        ...todo,
+        isCompleted: !this.todos.every(t => t.isCompleted)
+      }
+    })
     this.updateToLocalStorage();
   }
 
@@ -65,7 +88,7 @@ export class TodoService {
         this.filteredTodos = this.todos.filter((todo) => todo.isCompleted);
         break;
       case Filter.All:
-        this.filteredTodos = [...this.todos.map((todo) => ({ ...todo }))];
+        this.filteredTodos = [...this.todos];
         break;
     }
 
